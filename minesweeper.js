@@ -33,6 +33,12 @@ function startGame () {
   }
   // Don't remove this function call: it makes the game work!
   lib.initBoard()
+  document.addEventListener('click', function (event) {
+    checkForWin()
+  });
+  document.addEventListener('contextmenu', function (event) {
+    checkForWin()
+  });
 }
 
 // Define this function to look for a win condition:
@@ -43,7 +49,19 @@ function checkForWin () {
 
   // You can use this function call to declare a winner (once you've
   // detected that they've won, that is!)
-  //   lib.displayMessage('You win!')
+  for (var i = 0; i < board.cells.length; i++) {
+    var currentCell = board.cells[i]
+    // if the current cell is mine, check if it th market property exists and is not false
+    if (currentCell.isMine === true && !currentCell.isMarked) {
+      return
+    }
+
+    if(currentCell.isMine === false && currentCell.hidden === true){
+      return
+    }
+  }
+
+  lib.displayMessage('You win!')
 }
 
 // Define this function to count the number of mines around the cell
@@ -59,8 +77,9 @@ function countSurroundingMines (cell) {
   var surroundingCount = 0
   for (var i = 0; i < surrounding.length; i++) {
     var currentCell = surrounding[i]
-    if (currentCell.isMine === true)
+    if (currentCell.isMine === true) {
       surroundingCount++
+    }
   }
 
   return surroundingCount
